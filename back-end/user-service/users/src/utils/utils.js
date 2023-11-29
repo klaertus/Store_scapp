@@ -2,17 +2,16 @@ const bcrypt = require('bcryptjs')
 const tku = require('./en-de-coders')
 const log = require('debug')('users-d')
 const axios = require('axios')
-
 const nano = require('nano')(process.env.DB_URL);
 const users = nano.use(process.env.DB_NAME);
-
 const cart_service = process.env.CART_SERVICE_URL
 
-
+// function to compare the password provided by the user with the one in the database
 function equalPassws (usrPass, usrDbPass) {
   return bcrypt.compareSync(usrPass, usrDbPass)
 }
 
+// function to get the username of a user by token
 function getUsername(token){
   return new Promise((resolve, reject) => {
     const decoded = tku.verifyToken(token)
@@ -31,6 +30,7 @@ function getUsername(token){
   })
 }
 
+// function to get the level of a user by token
 function getUserLevel(token) {
   return new Promise((resolve, reject) => {
       //if (!token){
@@ -60,8 +60,7 @@ function getUserLevel(token) {
   })
 }
 
-
-
+// function to create a new user
 function createUser(username, password) {
   return new Promise((resolve, reject) => {
     // Check if username and password are provided
@@ -107,7 +106,7 @@ function createUser(username, password) {
   })
 }
 
-
+// function to authenticate a user
 function authenticateUser(username, password) {
   // Return the token of a provided username and password
   // Used for login into the website
@@ -128,7 +127,7 @@ function authenticateUser(username, password) {
   });
 }
 
-
+// function to set a user as an admin
 function setAdmin(token, targetUser) {
   return new Promise((resolve, reject) => {
     // Vérifier si l'utilisateur qui fait la demande est un administrateur
@@ -164,6 +163,7 @@ function setAdmin(token, targetUser) {
   })
 };
 
+// function to send a log to the log service
 function sendLog(token, service, type, operation, details, responseTime) {
   // Construct the log object
   const logData = {

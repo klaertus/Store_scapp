@@ -1,12 +1,11 @@
 
 const axios = require('axios');
-var user_service = process.env.USER_SERVICE_URL
-
 const log = require('debug')('order-d')
-
 const nano = require('nano')(process.env.DB_URL);
 const orders = nano.use(process.env.DB_NAME);
+var user_service = process.env.USER_SERVICE_URL
 
+// Function to create a new order
 function createOrder(token, checkout) {
   return new Promise((resolve, reject) => {
     axios.get(`${user_service}/user/validate`, { params: { token:token}})
@@ -16,39 +15,33 @@ function createOrder(token, checkout) {
           reject('User must be connected');
           return;
         }
-        // Insérer le nouveau panier dans la base de données
-        orders.list({})
-        .then(result => { 
+        orders.list({}) 
+        .then(result => { // Isert the order in the database
             var orderID = result.rows.length +1;
             checkout.user = username;
             orders.insert({checkout}, orderID)
             .then(result => { 
               resolve(true)
             })
-           .catch(error => {
-               // Gère les erreurs liées à la vérification du token
+           .catch(error => { 
                reject(`Erreur lors de la creation du panier de l'utilisateur ${username}. Details : ${error}.`)
             });
         })
-       .catch(error => {
+       .catch(error => { 
            reject(`Erreur lors de la creation du panier de l'utilisateur ${username}. Details : ${error}.`)
         });
       })
-      .catch(error => {
-        // Gère les erreurs liées à la vérification du token
+      .catch(error => { // If the token is not valid
         reject(`Échec de la vérification du token : ${error}`);
-      });
-    // Créer un nouveau panier vide
-    
+      });  
   });
 }
 
+// Function to get the order of a user
 function getOrder(token) {
-  return new Promise((resolve, reject) => {
-    // Vérifie d'abord le token
-    // Vérifie d'abord le token
+  return new Promise((resolve, reject) => { 
     log("Getting order 1")
-    axios.get(`${user_service}/user/validate`, { params: { token:token}})
+    axios.get(`${user_service}/user/validate`, { params: { token:token}}) // Validate the user token
     .then(result => { 
         let username = result.data.result
         log(username)
@@ -57,25 +50,22 @@ function getOrder(token) {
           return;
         }
         log(username)
-        // Si le token est valide, récupère le panier de l'utilisateur
-        orders.find({ selector: { "checkout.user": username }})
+        orders.find({ selector: { "checkout.user": username }}) // if the token is valid, get the order of the user
         .then(result => {
           const checkouts = result.docs.map(doc => doc.checkout);
           resolve(checkouts);
         })
         .catch(error => {
-            // Gère les erreurs liées à la vérification du token
             reject(`Erreur lors de la récupération du panier de l'utilisateur ${username}. Details : ${error}.`)
         });
       })
-      .catch(error => {
-        // Gère les erreurs liées à la vérification du token
+      .catch(error => { // If the token is not valid
         reject(`Échec de la vérification du token. Details : ${error}`);
       });
   });
 }
 
-
+// Function to send a log
 function sendLog(token, service, type, operation, details, responseTime) {
   // Construct the log object
   const logData = {
@@ -86,11 +76,8 @@ function sendLog(token, service, type, operation, details, responseTime) {
     details : details,
     responseTime: responseTime,
   };
-
-  // Print information about the log in the console
   log(logData)
-  // Send the log data to the log service
-  return axios.post(`${process.env.LOG_SERVICE_URL}/log/create/`, logData, { params: { token:token}});
+  return axios.post(`${process.env.LOG_SERVICE_URL}/log/create/`, logData, { params: { token:token}}); // Send the log to the log service
 }
 
 

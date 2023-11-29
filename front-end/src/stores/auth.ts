@@ -2,13 +2,11 @@ import { writable } from 'svelte/store';
 import { cart } from '@stores/cart';
 import axios from 'axios';
 
+const url = "http://192.168.56.103";
 
-const url = "http://192.168.1.36";
-
-
+// createCart initialise le cart
 function createUserStore() {
     const { subscribe, set, update } = writable({ isLogged: false, isAdmin: false, token: null });
-
     return {
         subscribe,
         update,

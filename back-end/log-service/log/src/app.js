@@ -4,7 +4,7 @@ const log = require('debug')('log-d')
 const app = express.Router()
 const utils = require('./utils/utils')
 
-
+// Get all logs
 app.get('/log/', (req, res) => {
   const token = req.query.token;
   const username = req.query.username;
@@ -27,7 +27,7 @@ app.get('/log/', (req, res) => {
     })
 });
 
-
+// Create a new log
 app.post('/log/create/', (req, res) => {
   const token = req.query.token; // if any
   log(res.query)

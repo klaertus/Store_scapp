@@ -1,15 +1,13 @@
 const axios = require('axios');
 const log = require('debug')('log-d')
-
-
 const user_service = process.env.USER_SERVICE_URL;
 const nano = require('nano')(process.env.DB_URL);
 const log_database = nano.use(process.env.DB_NAME);
 
+// Function to get the logs
 function getLog(token, username, level, type, service, operation){
-  
   return new Promise((resolve, reject) => {
-    axios.get(`${user_service}/user/level`, { params: { token:token}})
+    axios.get(`${user_service}/user/level`, { params: { token:token}}) // Validate the user token
     .then(response => { 
       let leveluser = response
       if (leveluser != 2){
@@ -33,8 +31,7 @@ function getLog(token, username, level, type, service, operation){
       });
     
     })
-    .catch(error => {
-        // Gère les erreurs liées à la vérification du token
+    .catch(error => { // If the token is not valid
         reject(new Error(`Échec de la vérification du token : ${error}`));
     });
     
@@ -42,10 +39,10 @@ function getLog(token, username, level, type, service, operation){
 
 }
 
+// Function to create a log
 function createLog(token, timestamp, type, service, operation, details, responseTime) {
   return new Promise((resolve, reject) => {
-    // Vérifie d'abord le token
-    axios.get(`${user_service}/user/validate`, { params: { token:token}})
+    axios.get(`${user_service}/user/validate`, { params: { token:token}}) // Validate the user token
     .then(result => {
       log(result.data) 
       let username = result.data.result
@@ -71,14 +68,12 @@ function createLog(token, timestamp, type, service, operation, details, response
           reject(`Error fetching logs: ${error.reason}`);
         });
       })
-      .catch(error => {
-          // Gère les erreurs liées à la vérification du token
+      .catch(error => { // If the token is not valid
           reject(`Error when getting user authorizations : ${error}`);
       });
     
     })
-    .catch(error => {
-        // Gère les erreurs liées à la vérification du token
+    .catch(error => { // If the token is not valid
         reject(`Error when validating token : ${error}`);
     });
     

@@ -1,11 +1,9 @@
 import { derived, writable } from 'svelte/store';
-
 import axios from "axios";
 
-const url = "http://192.168.1.36";
+const url = "http://192.168.56.103";
 
-
-
+// createCart initialise le cart
 function createCart() {
 	const { subscribe, set, update } = writable([]);
 
@@ -15,7 +13,7 @@ function createCart() {
 		update,
         set,
         clean: () => {
-            set([]); // Réinitialise le store à un tableau vide
+            set([]); // Init the cart
         },
         updateRemote: (items) => {
             return new Promise((resolve, reject) => {

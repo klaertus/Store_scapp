@@ -19,7 +19,7 @@
 	import axios from "axios";
     import { addToast } from '@stores/toasts';
 
-	const url = "http://192.168.1.36";
+	const url = "http://192.168.56.103";
 
 	let modalProduct = null;
 	let searchTerm = '';
@@ -39,6 +39,7 @@
 		showCreateModal = true;
 	}
 
+	// This function updates the product.
 	function updateModalProduct() {
 		axios
             .post(`${url}/product/updateItem/`, { id: modalProduct.id, name: modalProduct.name, price: modalProduct.price, image: modalProduct.image}, { params: { token: JSON.parse(window.localStorage.getItem('auth')).token }})
@@ -53,6 +54,7 @@
             });
 	}
 
+	// This function creates the product.
 	function createProduct() {
     axios
         .post(`${url}/product/createItem/`, {name: modalProduct.name, price: modalProduct.price, image: modalProduct.image, category: modalProduct.category }, { params: { token: JSON.parse(window.localStorage.getItem('auth')).token }})
@@ -72,7 +74,8 @@
 	function deleteModalProduct() {
         deleteProduct(modalProduct);
     }
-
+	
+	// This function deletes the product.
 	function deleteProduct(product) {
 		axios
             .post(`${url}/product/delItem/`, { id: product.id }, { params: { token: JSON.parse(window.localStorage.getItem('auth')).token }})

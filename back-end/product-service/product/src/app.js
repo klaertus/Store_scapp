@@ -1,11 +1,10 @@
 const express = require('express')
 const log = require('debug')('product-d')
-
 const app = express.Router()
-const db = require('./utils/crud-wp')
-
+const db = require('./utils/utils')
 const service = "product-service"
 
+// Create a new item
 app.post('/product/createItem/', (req, res) => {
   var token = req.query.token;
   var name = req.body.name
@@ -28,6 +27,7 @@ app.post('/product/createItem/', (req, res) => {
     })
 })
 
+// Delete an item
 app.post('/product/delItem/', (req, res) => {
   var token = req.query.token;
   var id = req.body.id;
@@ -46,6 +46,7 @@ app.post('/product/delItem/', (req, res) => {
     });
 });
 
+// Update an item
 app.post('/product/updateItem/', (req, res) => {
   var token = req.query.token;
   var id = req.body.id;
@@ -67,6 +68,7 @@ app.post('/product/updateItem/', (req, res) => {
     });
 });
 
+// Init the database
 app.post('/product/initOrder/', (req, res) => {
   const data = {
 		Vegetables: [
@@ -149,8 +151,9 @@ app.post('/product/initOrder/', (req, res) => {
   res.status(200).json({ status: 'success', message: 'Data inserted successfully' });
 });
 
+// Get all items
 app.get('/product/items/', (req, res) => {
-  return db.list({ include_docs: true })
+  return db.list({ include_docs: true }) // Get all items sous un format JSON
     .then((body) => {
       let items = body.rows.map(row => {
         return {

@@ -15,4 +15,4 @@ docker build -t scapp-product src/back-end/product-service/product/.
 
 
 docker stack rm scapp
-docker stack deploy -c src/scapp.yml scapp
+docker stack deploy -c scapp.yml scapp

@@ -12,5 +12,5 @@ else
 fi
 
 
-docker build -t scapp-frontend src/front-end/.
+docker build -t scapp-frontend front-end/.
 docker run -d -p 3000:3000 scapp-frontend

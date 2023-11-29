@@ -3,10 +3,10 @@ deploy:
 	make run-front
 
 run-front: 
-	./src/front-end/deploy.sh
+	./front-end/deploy.sh
 	
 run-back:
-	./src/deploy.sh
+	./deploy.sh
 	
 
 

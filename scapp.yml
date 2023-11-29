@@ -1,0 +1,134 @@
+version: "3"
+services:     # list all services for your application
+
+  # Nginx used for API Gateway
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80" # Port to handle API requests
+      - "8080:8080" # Port to connect to the differents databases interfaces
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    depends_on:
+    - "product-db"
+    - "product-service"
+    - "user-db"
+    - "user-service"
+    - "cart-db"
+    - "cart-service"
+    - "log-db"
+    - "log-service"
+    - "order-db"
+    - "order-service"
+    networks: [ "scapp-net" ]
+
+  # database of user-service
+  user-db:
+    # image name
+    image: klaertus/kv-storage-system:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+  # user service   
+  user-service:
+    image: scapp-user
+    depends_on: [ "user-db" ]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+  # database of cart-service
+  cart-db:
+    image: klaertus/kv-storage-system:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+  # cart service
+  cart-service:
+    image: scapp-cart
+    depends_on: [ "cart-db" ]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+    # database of order-service
+  order-db:
+    image: klaertus/kv-storage-system:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+  # cart service
+  order-service:
+    image: scapp-order
+    depends_on: [ "order-db" ]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+
+
+
+  
+  # database of logs
+  log-db:
+    image: klaertus/kv-storage-system:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+  # log service
+  log-service:
+    image: scapp-log
+    depends_on: [ "log-db" ]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+    
+    # database of product-service
+  product-db:
+    # image name
+    image: klaertus/kv-storage-system:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+  # product service   
+  product-service:
+    image: scapp-product
+    depends_on: [ "product-db"]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks: [ "scapp-net" ]
+
+
+  
+networks:
+  scapp-net:
+    external: true

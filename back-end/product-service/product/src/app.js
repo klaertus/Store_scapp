@@ -153,7 +153,7 @@ app.post('/product/initOrder/', (req, res) => {
 
 // Get all items
 app.get('/product/items/', (req, res) => {
-  return db.list({ include_docs: true }) // Get all items sous un format JSON
+  return db.list({ include_docs: true }) // Get all items in JSON
     .then((body) => {
       let items = body.rows.map(row => {
         return {

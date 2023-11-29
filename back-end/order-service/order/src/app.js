@@ -15,7 +15,7 @@ app.post('/order/create/', (req, res) => {
       res.status(200).json({ status: 'success', result })
     })
     .catch((error) => {
-      res.status(409).json({ status: 'error', result: String(error) })
+      res.status(403).json({ status: 'error', result: String(error) })
     })
 })
 
@@ -29,7 +29,7 @@ app.get('/order/get/', (req, res) => {
       res.status(200).json({ status: 'success', result})
     })
     .catch((error) => {
-      res.status(409).json({ status: 'error', result: String(error) })
+      res.status(403).json({ status: 'error', result: String(error) })
     })
 })
 

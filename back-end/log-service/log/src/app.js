@@ -23,7 +23,7 @@ app.get('/log/', (req, res) => {
     })
     .catch((error) => {
       utils.sendLog(token, service, "INFO", operation, `Logs not gotten. Details : ${error}`, 0)
-      res.status(404).json({ status: 'error', message: String(error) })
+      res.status(403).json({ status: 'error', message: String(error) })
     })
 });
 

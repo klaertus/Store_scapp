@@ -43,14 +43,11 @@ app.post('/user/authenticate/', (req, res) => {
 app.get('/user/validate/', (req, res) => {
   var token = req.query.token;
   const operation = "CheckTokenValidity"
-  log(`${token}, ${service}, "INFO", ${operation}, Checking token validity :, 0`)
   return utils.getUsername(token)
     .then((result) => {
-      log(`${token}, ${service}, "INFO", ${operation}, Checking token validity : ${result}, 0`)
       res.status(200).json({ status: 'success', result})
     })
     .catch((error) => {
-      log(error)
       res.status(403).json({ status: 'error', result:String(error)})
     })
 })
@@ -58,15 +55,11 @@ app.get('/user/validate/', (req, res) => {
 app.get('/user/level/', (req, res) => {
   var token = req.query.token;
   const operation = "CheckUserLevel"
-  //utils.sendLog(token, service, "INFO", operation, `Checking user level`, 0)
   return utils.getUserLevel(token)
     .then((result) => {
-      //utils.sendLog(token, service, "INFO", operation, `User is level ${result}`, 0)
       res.status(200).json({ status: 'success', result})
     })
     .catch((error) => {
-      //utils.sendLog(token, service, "INFO", operation, `Can't verifying user level. Details ${error}`, 0)
-      log(error)
       res.status(403).json({ status: 'error', result:String(error) })
     })
 })
@@ -86,7 +79,7 @@ app.put('/user/setAdmin/', (req, res) => {
     })
     .catch((error) => {
       utils.sendLog(result, service, "ERROR", operation, `${username} is not admin. Details : ${error}`, 0)
-      res.status(404).json({ status: 'error', result:String(error)})
+      res.status(403).json({ status: 'error', result:String(error)})
     })
 })
 
